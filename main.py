@@ -6,6 +6,7 @@ import os
 
 app = Flask(__name__)
 CORS(app)
+
 # Funktion: Discord-Status
 def get_discord_status():
     try:
@@ -36,6 +37,46 @@ def get_zoom_status():
     except:
         return {'service': 'Zoom', 'status': 'Fehler'}
 
+# Funktion: Twitter-Status
+def get_twitter_status():
+    try:
+        page = requests.get('https://status.twitterstat.us/', timeout=5)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        status = soup.find('span', class_='component-status').text.strip()
+        return {'service': 'Twitter', 'status': status}
+    except:
+        return {'service': 'Twitter', 'status': 'Fehler'}
+
+# Funktion: Slack-Status
+def get_slack_status():
+    try:
+        page = requests.get('https://status.slack.com/', timeout=5)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        status = soup.find('span', class_='component-status').text.strip()
+        return {'service': 'Slack', 'status': status}
+    except:
+        return {'service': 'Slack', 'status': 'Fehler'}
+
+# Funktion: Spotify-Status
+def get_spotify_status():
+    try:
+        page = requests.get('https://status.spotify.com/', timeout=5)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        status = soup.find('span', class_='component-status').text.strip()
+        return {'service': 'Spotify', 'status': status}
+    except:
+        return {'service': 'Spotify', 'status': 'Fehler'}
+
+# Funktion: AWS-Status
+def get_aws_status():
+    try:
+        page = requests.get('https://status.aws.amazon.com/', timeout=5)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        status = soup.find('span', class_='component-status').text.strip()
+        return {'service': 'AWS', 'status': status}
+    except:
+        return {'service': 'AWS', 'status': 'Fehler'}
+
 @app.route('/')
 def home():
     return "Status Monitor Backend - V1 läuft!"
@@ -46,11 +87,13 @@ def get_all_statuses():
     statuses = [
         get_discord_status(),
         get_github_status(),
-        get_zoom_status()
+        get_zoom_status(),
+        get_twitter_status(),
+        get_slack_status(),
+        get_spotify_status(),
+        get_aws_status()
     ]
     return jsonify(statuses)
-
-import os
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
