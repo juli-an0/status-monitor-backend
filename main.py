@@ -72,9 +72,9 @@ def get_microsoft_status():
         page = requests.get('https://portal.office.com/servicestatus', timeout=5)
         soup = BeautifulSoup(page.content, 'html.parser')
         status = soup.find('span', class_='component-status').text.strip()
-        return {'service': 'Spotify', 'status': status}
+        return {'service': 'Microsoft', 'status': status}
     except:
-        return {'service': 'Spotify', 'status': 'Fehler'}
+        return {'service': 'Microsoft', 'status': 'Fehler'}
 
 # Funktion: AWS-Status
 def get_aws_status():
