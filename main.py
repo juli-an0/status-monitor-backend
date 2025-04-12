@@ -79,7 +79,7 @@ def get_spotify_status():
 # Funktion: AWS-Status
 def get_aws_status():
     try:
-        page = requests.get('https://health.aws.amazon.com/health/status', timeout=5)
+        page = requests.get('https://health.aws.amazon.com/govcloud', timeout=5)
         soup = BeautifulSoup(page.content, 'html.parser')
 
         # Überprüfen, ob der Dienst keine aktuellen Probleme hat
