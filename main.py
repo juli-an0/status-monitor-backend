@@ -79,11 +79,19 @@ def get_spotify_status():
 # Funktion: AWS-Status
 def get_aws_status():
     try:
-        page = requests.get('https://status.aws.amazon.com/', timeout=5)
+        page = requests.get('https://health.aws.amazon.com/health/status', timeout=5)
         soup = BeautifulSoup(page.content, 'html.parser')
-        status = soup.find('span', class_='component-status').text.strip()
-        return {'service': 'AWS', 'status': status}
-    except:
+
+        # Überprüfen, ob der Dienst keine aktuellen Probleme hat
+        status_text = soup.find('h2', class_='awsui_h2-variant_18wu0_1yxfb_176').text.strip()
+
+        if 'No recent issues' in status_text:
+            return {'service': 'AWS', 'status': 'Operational'}
+        else:
+            return {'service': 'AWS', 'status': 'Degraded or Down'}
+
+    except Exception as e:
+        print(f"Fehler bei AWS: {e}")
         return {'service': 'AWS', 'status': 'Fehler'}
 
 @app.route('/')
