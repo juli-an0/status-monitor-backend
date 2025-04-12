@@ -1,10 +1,11 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 import requests
 from bs4 import BeautifulSoup
 import os
 
 app = Flask(__name__)
-
+CORS(app)
 # Funktion: Discord-Status
 def get_discord_status():
     try:
