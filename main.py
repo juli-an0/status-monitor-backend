@@ -50,11 +50,20 @@ def get_twitter_status():
 # Funktion: Slack-Status
 def get_slack_status():
     try:
-        page = requests.get('https://slack-status.com/', timeout=5)
+        page = requests.get('https://status.slack.com/', timeout=5)
         soup = BeautifulSoup(page.content, 'html.parser')
-        status = soup.find('span', class_='component-status').text.strip()
-        return {'service': 'Slack', 'status': status}
-    except:
+
+        # Den Text des <h1> Tags abfragen, um den Status zu bekommen
+        status_text = soup.find('h1', class_='text-center').text.strip()
+
+        # Überprüfen, ob der Dienst läuft
+        if 'up and running' in status_text.lower():
+            return {'service': 'Slack', 'status': 'Operational'}
+        else:
+            return {'service': 'Slack', 'status': 'Degraded or Down'}
+
+    except Exception as e:
+        print(f"Fehler bei Slack: {e}")
         return {'service': 'Slack', 'status': 'Fehler'}
 
 # Funktion: Spotify-Status
