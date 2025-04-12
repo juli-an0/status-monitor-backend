@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 import requests
 from bs4 import BeautifulSoup
+import os
 
 app = Flask(__name__)
 
@@ -48,5 +49,8 @@ def get_all_statuses():
     ]
     return jsonify(statuses)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=81)
+import os
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
