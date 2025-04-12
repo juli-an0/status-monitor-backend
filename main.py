@@ -66,10 +66,10 @@ def get_slack_status():
         print(f"Fehler bei Slack: {e}")
         return {'service': 'Slack', 'status': 'Fehler'}
 
-# Funktion: Spotify-Status
-def get_spotify_status():
+# Funktion: Microsoft-Status
+def get_microsoft_status():
     try:
-        page = requests.get('https://status.spotify.com/', timeout=5)
+        page = requests.get('https://portal.office.com/servicestatus', timeout=5)
         soup = BeautifulSoup(page.content, 'html.parser')
         status = soup.find('span', class_='component-status').text.strip()
         return {'service': 'Spotify', 'status': status}
@@ -107,7 +107,7 @@ def get_all_statuses():
         get_zoom_status(),
         get_twitter_status(),
         get_slack_status(),
-        get_spotify_status(),
+        get_microsoft_status(),
         get_aws_status()
     ]
     return jsonify(statuses)
