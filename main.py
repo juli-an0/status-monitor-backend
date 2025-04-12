@@ -66,14 +66,23 @@ def get_slack_status():
         print(f"Fehler bei Slack: {e}")
         return {'service': 'Slack', 'status': 'Fehler'}
 
-# Funktion: Microsoft-Status
+# Funktion: Microsoft-Status (Microsoft Portal Service Status)
 def get_microsoft_status():
     try:
         page = requests.get('https://portal.office.com/servicestatus', timeout=5)
         soup = BeautifulSoup(page.content, 'html.parser')
-        status = soup.find('span', class_='component-status').text.strip()
-        return {'service': 'Microsoft', 'status': status}
-    except:
+
+        # Extrahiere den Statustext aus dem <h1>-Tag
+        status_text = soup.find('h1', class_='sp-banner-title ng-binding').text.strip()
+
+        # Überprüfen, ob der Dienst "Alles in Ordnung" ist
+        if 'Alles in Ordnung' in status_text:
+            return {'service': 'Microsoft', 'status': 'Operational'}
+        else:
+            return {'service': 'Microsoft', 'status': 'Degraded or Down'}
+
+    except Exception as e:
+        print(f"Fehler bei Microsoft: {e}")
         return {'service': 'Microsoft', 'status': 'Fehler'}
 
 # Funktion: AWS-Status
